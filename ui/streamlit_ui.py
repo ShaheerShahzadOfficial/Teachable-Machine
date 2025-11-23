@@ -15,7 +15,13 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
-import cv2
+
+# Import cv2 only if available (for webcam functionality)
+try:
+    import cv2
+    CV2_AVAILABLE = True
+except ImportError:
+    CV2_AVAILABLE = False
 
 # Page config
 st.set_page_config(
@@ -331,7 +337,13 @@ with tab3:
     
     if st.session_state.predictor.is_ready():
         st.markdown("---")
-        prediction_mode = st.radio("🎯 Select Prediction Mode", ["📤 Upload Image", "📹 Webcam (Live)"], horizontal=True)
+        
+        # Show webcam option only if cv2 is available
+        if CV2_AVAILABLE:
+            prediction_mode = st.radio("🎯 Select Prediction Mode", ["📤 Upload Image", "📹 Webcam (Live)"], horizontal=True)
+        else:
+            prediction_mode = "📤 Upload Image"
+            st.info("ℹ️ Webcam mode is not available in this environment. Use image upload instead.")
         
         if prediction_mode == "📤 Upload Image":
             st.subheader("📤 Upload Image for Prediction")

@@ -1,11 +1,17 @@
 import numpy as np
 from PIL import Image
-import cv2
 from pathlib import Path
 from typing import Tuple, List, Dict
 import joblib
 import tensorflow as tf
 from tensorflow import keras
+
+# Import cv2 only when needed for webcam functionality
+try:
+    import cv2
+    CV2_AVAILABLE = True
+except ImportError:
+    CV2_AVAILABLE = False
 
 class Predictor:
     """Handle predictions from all model types"""
@@ -139,6 +145,9 @@ class Predictor:
     
     def predict_from_webcam_frame(self, frame: np.ndarray) -> Dict[str, Tuple[str, Dict[str, float]]]:
         """Predict from webcam frame"""
+        if not CV2_AVAILABLE:
+            raise ImportError("OpenCV (cv2) is required for webcam functionality but is not available")
+        
         # Convert BGR to RGB
         frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         
