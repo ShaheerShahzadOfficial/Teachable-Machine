@@ -1,0 +1,5 @@
+data/images/
+
+# Ignore model files
+*.pkl
+*.keras
